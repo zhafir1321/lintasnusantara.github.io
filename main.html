@@ -82,7 +82,7 @@
                   </button>
                 </div>
                 <!-- Modal body -->
-                <form class="p-4 md:p-5">
+                <form id="myForm" class="p-4 md:p-5">
                   <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                       <label
@@ -107,8 +107,8 @@
                       >
                       <input
                         type="number"
-                        name="price"
-                        id="price"
+                        name="berat"
+                        id="berat"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Berat"
                         required=""
@@ -116,12 +116,12 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                       <label
-                        for="category"
+                        for="shipment"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >Tujuan</label
                       >
                       <select
-                        id="category"
+                        id="shipment"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       >
                         <option selected="">Pilih Tujuan</option>
@@ -139,11 +139,12 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                       <label
-                        for="berat"
+                        for="category"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >Jenis Pengiriman</label
                       >
                       <select
+                        id="category"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       >
                         <option selected="">Pilih Jenis Pengiriman</option>
@@ -151,10 +152,12 @@
                       </select>
                     </div>
                   </div>
-                  <div class="flex justify-center">
+                  <div class="flex justify-center" >
                     <button
                       type="submit"
                       class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      onclick="paket()"
+                      data-modal-toggle="crud-modal"
                     >
                       <svg
                         class="me-1 -ms-1 w-5 h-5"
@@ -193,9 +196,9 @@
                 <th class="text-center border">Aksi</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="dataTable">
               <tr class="tbody">
-                <td class="text-center border">1</td>
+                <!-- <td class="text-center border">1</td>
                 <td class="text-center border">Sepeda</td>
                 <td class="text-center border">30kg</td>
                 <td class="text-center border">Jakarta</td>
@@ -216,7 +219,7 @@
                       height="20px"
                     />
                   </div>
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </table>

@@ -143,28 +143,199 @@ function tujuanPaket(tujuan) {
 }
 //output = [ 50000, '2 hari']
 
-function paket(nama, beratPackage, tujuan) {
+function paket(nama, beratPackage, tujuan, category) {
   let name = jenisPaket(nama);
-  let kg = beratPaket(beratPackage);
+  let pricePerKg = beratPaket(beratPackage);
   let destination = tujuanPaket(tujuan);
-  let newPrice = name + kg + destination[0];
+  let newPrice = name + pricePerKg + destination[0];
   let result = {
     namaBarang: nama,
     berat: beratPackage,
     tujuan: tujuan,
-    jenisPengirim: "Standard",
+    jenisPengirim: category,
     estimasi: destination[1],
     harga: newPrice,
     status: "Sedang dalam proses",
   };
   return result;
 }
-//output = [ 75000, 2 hari ]
 
-const namaPaket = "barang";
-const berat = 0.8;
-const tujuan = "aceh";
+// let resultArr = []
+// resultArr.push(paket)
+// console.log(resultArr);
 
-console.log(paket(namaPaket, berat, tujuan));
 
-// output [ 75000, 2 hari ]
+function addNewRowToTable(data){
+
+  //taro sini
+  const formatRupiah = (number)=>{
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR"
+    }).format(number);
+  }
+
+
+  // Create a new table row element
+  const newRow = document.createElement('tr');
+  newRow.classList.add('tbody');
+
+  // Create the columns for the new row
+  const cell1 = document.createElement('td');
+  cell1.classList.add('text-center', 'border');
+  cell1.textContent = document.querySelectorAll('#dataTable tr').length; // Row number
+
+  const cell2 = document.createElement('td');
+  cell2.classList.add('text-center', 'border');
+  cell2.textContent = data.namaBarang;
+
+  const cell3 = document.createElement('td');
+  cell3.classList.add('text-center', 'border');
+  cell3.textContent = data.berat + 'kg';
+
+  const cell4 = document.createElement('td');
+  cell4.classList.add('text-center', 'border');
+  cell4.textContent = data.tujuan;
+
+  const cell5 = document.createElement('td');
+  cell5.classList.add('text-center', 'border');
+  cell5.textContent = data.jenisPengirim;
+
+  const cell6 = document.createElement('td');
+  cell6.classList.add('text-center', 'border');
+  cell6.textContent = data.estimasi;
+  
+  const cell7 = document.createElement('td');
+  cell7.classList.add('text-center', 'border');
+  cell7.textContent = formatRupiah(data.harga);
+  
+  const cell8 = document.createElement('td');
+  cell8.classList.add('text-center', 'border');
+  cell8.textContent = 'Sedang diproses';
+
+  const cell9 = document.createElement('td');
+  cell9.classList.add('text-center', 'border');
+  const div = document.createElement('div');
+  div.classList.add('flex', 'px-1', 'w-full');
+  const editImg = document.createElement('img');
+  editImg.src = './img/edit.png';
+  editImg.width = 20;
+  editImg.height = 20;
+  const deleteImg = document.createElement('img');
+  deleteImg.src = './img/hapus.png';
+  deleteImg.width = 20;
+  deleteImg.height = 20;
+  div.appendChild(editImg);
+  div.appendChild(deleteImg);
+  cell9.appendChild(div);
+
+  // Append the columns to the new row
+  newRow.appendChild(cell1);
+  newRow.appendChild(cell2);
+  newRow.appendChild(cell3);
+  newRow.appendChild(cell4);
+  newRow.appendChild(cell5);
+  newRow.appendChild(cell6);
+  newRow.appendChild(cell7);
+  newRow.appendChild(cell8);
+  newRow.appendChild(cell9);
+
+  // Append the new row to the table body
+  document.getElementById('dataTable').appendChild(newRow);
+}
+
+
+document.getElementById('myForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the values from the input elements
+    const name = document.getElementById('name').value;
+    const berat = document.getElementById('berat').value;
+    const category = document.getElementById('category').value;
+    const shipment = document.getElementById('shipment').value;
+
+    // // Log the values to the console
+    // console.log('Name:', name);
+    // console.log('Berat:', berat);
+    // console.log('Category:', category);
+    // console.log('Shipment:', shipment);
+
+    // // You can now run any JavaScript code using these values
+    // // For example, you can display the values on the page
+    
+    const newData = paket(name, berat, shipment, category);
+
+    addNewRowToTable(newData);
+});
+
+
+
+// // output [ 75000, 2 hari ]
+// // taro sini
+// document.getElementById('myForm').addEventListener('submit', function(event) {
+//     event.preventDefault(); // Prevent the default form submission
+
+//     // Get the values from the input elements
+//     const name = document.getElementById('name').value;
+//     const price = document.getElementById('price').value;
+//     const category = document.getElementById('category').value;
+//     const shipment = document.getElementById('shipment').value;
+
+//     // Create a new table row element
+//     const newRow = document.createElement('tr');
+//     newRow.classList.add('tbody');
+
+//     // Create the columns for the new row
+//     const cell1 = document.createElement('td');
+//     cell1.classList.add('text-center', 'border');
+//     cell1.textContent = document.querySelectorAll('#dataTable tr').length + 1; // Row number
+
+//     const cell2 = document.createElement('td');
+//     cell2.classList.add('text-center', 'border');
+//     cell2.textContent = name;
+
+//     const cell3 = document.createElement('td');
+//     cell3.classList.add('text-center', 'border');
+//     cell3.textContent = price + 'kg';
+
+//     const cell4 = document.createElement('td');
+//     cell4.classList.add('text-center', 'border');
+//     cell4.textContent = category;
+
+//     const cell5 = document.createElement('td');
+//     cell5.classList.add('text-center', 'border');
+//     cell5.textContent = shipment;
+
+//     const cell6 = document.createElement('td');
+//     cell6.classList.add('text-center', 'border');
+//     cell6.textContent = 'Belum Terkirim';
+
+//     const cell7 = document.createElement('td');
+//     cell7.classList.add('text-center', 'border');
+//     const div = document.createElement('div');
+//     div.classList.add('flex', 'px-1', 'w-full');
+//     const editImg = document.createElement('img');
+//     editImg.src = './img/edit.png';
+//     editImg.width = 20;
+//     editImg.height = 20;
+//     const deleteImg = document.createElement('img');
+//     deleteImg.src = './img/hapus.png';
+//     deleteImg.width = 20;
+//     deleteImg.height = 20;
+//     div.appendChild(editImg);
+//     div.appendChild(deleteImg);
+//     cell7.appendChild(div);
+
+//     // Append the columns to the new row
+//     newRow.appendChild(cell1);
+//     newRow.appendChild(cell2);
+//     newRow.appendChild(cell3);
+//     newRow.appendChild(cell4);
+//     newRow.appendChild(cell5);
+//     newRow.appendChild(cell6);
+//     newRow.appendChild(cell7);
+
+//     // Append the new row to the table body
+//     document.getElementById('dataTable').appendChild(newRow);
+
+//     //
