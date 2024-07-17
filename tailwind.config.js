@@ -1,8 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
-    fontSize: {
-      sm: "5px",
+    extend: {
+      colors: {
+        "green-custom": "#468585",
+      },
     },
   },
 };

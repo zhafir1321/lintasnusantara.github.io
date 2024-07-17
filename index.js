@@ -62,7 +62,7 @@ function tujuanPaket(tujuan) {
       const sevenDD = String(waktu.getDate()).padStart(2, "0");
       const sevenMM = String(waktu.getMonth() + 1).padStart(2, "0");
       const sevenYY = String(waktu.getFullYear()).slice(-2);
-      const sevenFormatted = `${sevenDD}-${sevenMMMM}-${sevenYYYY}`;
+      const sevenFormatted = `${sevenDD}-${sevenMM}-${sevenYY}`;
       arr.push(harga, sevenFormatted);
       break;
     case "padang":
@@ -142,8 +142,7 @@ function tujuanPaket(tujuan) {
   return arr;
 }
 //output = [ 50000, '2 hari']
-
-function paket(nama, beratPackage, tujuan, category) {
+let paket = function (nama, beratPackage, tujuan, category) {
   let name = jenisPaket(nama);
   let pricePerKg = beratPaket(beratPackage);
   let destination = tujuanPaket(tujuan);
@@ -157,79 +156,66 @@ function paket(nama, beratPackage, tujuan, category) {
     harga: newPrice,
     status: "Sedang dalam proses",
   };
+
   return result;
-}
+};
 
-// let resultArr = []
-// resultArr.push(paket)
-// console.log(resultArr);
-
-
-function addNewRowToTable(data){
-
+function addNewRowToTable(data, barang) {
   //taro sini
-  const formatRupiah = (number)=>{
+  const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
-      currency: "IDR"
+      currency: "IDR",
     }).format(number);
-  }
+  };
 
+  const newRow = document.createElement("tr");
+  newRow.classList.add("tbody");
 
-  // Create a new table row element
-  const newRow = document.createElement('tr');
-  newRow.classList.add('tbody');
+  const cell1 = document.createElement("td");
+  cell1.classList.add("text-center", "border", "text-white");
+  cell1.textContent = document.querySelectorAll("#dataTable tr").length;
 
-  // Create the columns for the new row
-  const cell1 = document.createElement('td');
-  cell1.classList.add('text-center', 'border');
-  cell1.textContent = document.querySelectorAll('#dataTable tr').length; // Row number
-
-  const cell2 = document.createElement('td');
-  cell2.classList.add('text-center', 'border');
+  const cell2 = document.createElement("td");
+  cell2.classList.add("text-center", "border", "text-white");
   cell2.textContent = data.namaBarang;
 
-  const cell3 = document.createElement('td');
-  cell3.classList.add('text-center', 'border');
-  cell3.textContent = data.berat + 'kg';
+  const cell3 = document.createElement("td");
+  cell3.classList.add("text-center", "border", "text-white");
+  cell3.textContent = data.berat + "kg";
 
-  const cell4 = document.createElement('td');
-  cell4.classList.add('text-center', 'border');
+  const cell4 = document.createElement("td");
+  cell4.classList.add("text-center", "border", "text-white");
   cell4.textContent = data.tujuan;
 
-  const cell5 = document.createElement('td');
-  cell5.classList.add('text-center', 'border');
+  const cell5 = document.createElement("td");
+  cell5.classList.add("text-center", "border", "text-white");
   cell5.textContent = data.jenisPengirim;
 
-  const cell6 = document.createElement('td');
-  cell6.classList.add('text-center', 'border');
+  const cell6 = document.createElement("td");
+  cell6.classList.add("text-center", "border", "text-white");
   cell6.textContent = data.estimasi;
-  
-  const cell7 = document.createElement('td');
-  cell7.classList.add('text-center', 'border');
-  cell7.textContent = formatRupiah(data.harga);
-  
-  const cell8 = document.createElement('td');
-  cell8.classList.add('text-center', 'border');
-  cell8.textContent = 'Sedang diproses';
 
-  const cell9 = document.createElement('td');
-  cell9.classList.add('text-center', 'border');
-  const div = document.createElement('div');
-  div.classList.add('flex', 'px-1', 'w-full');
-  const editImg = document.createElement('img');
-  editImg.src = './img/edit.png';
-  editImg.width = 20;
-  editImg.height = 20;
-  const deleteImg = document.createElement('img');
-  deleteImg.src = './img/hapus.png';
+  const cell7 = document.createElement("td");
+  cell7.classList.add("text-center", "border", "text-white");
+  cell7.textContent = formatRupiah(data.harga);
+
+  const cell8 = document.createElement("td");
+  cell8.classList.add("text-center", "border", "text-white");
+  cell8.textContent = "Sedang diproses";
+
+  const cell9 = document.createElement("td");
+  cell9.classList.add("text-center", "border", "text-white");
+  const div = document.createElement("div");
+  div.classList.add("flex", "px-1", "w-full");
+  const deleteImg = document.createElement("img");
+  deleteImg.classList.add("mx-auto");
+  deleteImg.src = "./img/hapus.png";
   deleteImg.width = 20;
   deleteImg.height = 20;
-  div.appendChild(editImg);
   div.appendChild(deleteImg);
   cell9.appendChild(div);
 
-  // Append the columns to the new row
   newRow.appendChild(cell1);
   newRow.appendChild(cell2);
   newRow.appendChild(cell3);
@@ -240,35 +226,28 @@ function addNewRowToTable(data){
   newRow.appendChild(cell8);
   newRow.appendChild(cell9);
 
-  // Append the new row to the table body
-  document.getElementById('dataTable').appendChild(newRow);
+  document.getElementById("dataTable").appendChild(newRow);
 }
 
+let arr = [];
 
-document.getElementById('myForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the default form submission
+document.getElementById("myForm").addEventListener("submit", function (event) {
+  event.preventDefault();
 
-    // Get the values from the input elements
-    const name = document.getElementById('name').value;
-    const berat = document.getElementById('berat').value;
-    const category = document.getElementById('category').value;
-    const shipment = document.getElementById('shipment').value;
+  const name = document.getElementById("name").value;
+  const berat = document.getElementById("berat").value;
+  const category = document.getElementById("category").value;
+  const shipment = document.getElementById("shipment").value;
 
-    // // Log the values to the console
-    // console.log('Name:', name);
-    // console.log('Berat:', berat);
-    // console.log('Category:', category);
-    // console.log('Shipment:', shipment);
+  const newData = paket(name, berat, shipment, category);
+  arr.push(newData);
+  localStorage.setItem("barang", JSON.stringify(arr));
+  let barang = JSON.parse(localStorage.getItem("barang"));
 
-    // // You can now run any JavaScript code using these values
-    // // For example, you can display the values on the page
-    
-    const newData = paket(name, berat, shipment, category);
-
-    addNewRowToTable(newData);
+  addNewRowToTable(newData, barang);
 });
 
-
+let isi = JSON.parse(localStorage.getItem("barang"));
 
 // // output [ 75000, 2 hari ]
 // // taro sini
