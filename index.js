@@ -20,6 +20,7 @@ function jenisPaket(nama) {
 
 function beratPaket(beratPackage) {
   let harga = 0;
+  let hargaTambahan = 50_000;
   if (beratPackage < 1) {
     harga = 10_000;
     return harga;
@@ -33,7 +34,7 @@ function beratPaket(beratPackage) {
     harga = 75_000;
     return harga;
   } else if (beratPackage >= 20) {
-    let temp = Math.ceil((beratPackage - 20) / 5);
+    let temp = Math.ceil((beratPackage - 20) / 5) * hargaTambahan; 
     harga = 150_000 + temp;
     return harga;
   }
@@ -158,10 +159,28 @@ let paket = function (nama, beratPackage, tujuan, category) {
   };
 
   return result;
-};
+}
 
-function addNewRowToTable(data, barang) {
-  //taro sini
+
+function getData(arr) {
+  let data = JSON.parse(arr)
+  let result = {}
+  console.log(data);
+  for(let i = 0; i < data.length; i++){
+    result = {
+      namaBarang: data[i].namaBarang,
+      berat: data[i].berat,
+      tujuan: data[i].tujuan,
+      jenisPengirim: data[i].jenisPengirim,
+      estimasi: data[i].estimasi,
+      harga: data[i].harga,
+      status: data[i].status
+    }
+  }
+  return result
+}
+
+function addNewRowToTable(data, id) {
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -169,15 +188,16 @@ function addNewRowToTable(data, barang) {
     }).format(number);
   };
 
-  const newRow = document.createElement("tr");
-  newRow.classList.add("tbody");
+  const newRow = document.createElement('tr');
+  newRow.classList.add('tbody');
+  newRow.setAttribute('data-id', id);
 
-  const cell1 = document.createElement("td");
-  cell1.classList.add("text-center", "border", "text-white");
-  cell1.textContent = document.querySelectorAll("#dataTable tr").length;
+  const cell1 = document.createElement('td');
+  cell1.classList.add('text-center', 'border');
+  cell1.textContent = document.querySelectorAll('#dataTable tr').length;
 
-  const cell2 = document.createElement("td");
-  cell2.classList.add("text-center", "border", "text-white");
+  const cell2 = document.createElement('td');
+  cell2.classList.add('text-center', 'border');
   cell2.textContent = data.namaBarang;
 
   const cell3 = document.createElement("td");
@@ -196,24 +216,31 @@ function addNewRowToTable(data, barang) {
   cell6.classList.add("text-center", "border", "text-white");
   cell6.textContent = data.estimasi;
 
-  const cell7 = document.createElement("td");
-  cell7.classList.add("text-center", "border", "text-white");
+  const cell7 = document.createElement('td');
+  cell7.classList.add('text-center', 'border');
   cell7.textContent = formatRupiah(data.harga);
 
-  const cell8 = document.createElement("td");
-  cell8.classList.add("text-center", "border", "text-white");
-  cell8.textContent = "Sedang diproses";
+  const cell8 = document.createElement('td');
+  cell8.classList.add('text-center', 'border');
+  cell8.textContent = 'Sedang diproses';
 
-  const cell9 = document.createElement("td");
-  cell9.classList.add("text-center", "border", "text-white");
-  const div = document.createElement("div");
-  div.classList.add("flex", "px-1", "w-full");
-  const deleteImg = document.createElement("img");
-  deleteImg.classList.add("mx-auto");
-  deleteImg.src = "./img/hapus.png";
+  const cell9 = document.createElement('td');
+  cell9.classList.add('text-center', 'border');
+  const div = document.createElement('div');
+  div.classList.add('flex', 'px-1', 'w-full');
+
+  const deleteButton = document.createElement('button');
+  deleteButton.classList.add('delete-button');
+  deleteButton.onclick = function () {
+    deleteData(id); // Pass the unique identifier
+  };
+  const deleteImg = document.createElement('img');
+  deleteImg.src = './img/hapus.png';
   deleteImg.width = 20;
   deleteImg.height = 20;
-  div.appendChild(deleteImg);
+  deleteButton.appendChild(deleteImg);
+
+  div.appendChild(deleteButton);
   cell9.appendChild(div);
 
   newRow.appendChild(cell1);
@@ -226,95 +253,51 @@ function addNewRowToTable(data, barang) {
   newRow.appendChild(cell8);
   newRow.appendChild(cell9);
 
-  document.getElementById("dataTable").appendChild(newRow);
+
+  document.getElementById('dataTable').appendChild(newRow);
 }
 
 let arr = [];
 
-document.getElementById("myForm").addEventListener("submit", function (event) {
+
+document.getElementById('myForm').addEventListener('submit', function(event) {
   event.preventDefault();
 
-  const name = document.getElementById("name").value;
-  const berat = document.getElementById("berat").value;
-  const category = document.getElementById("category").value;
-  const shipment = document.getElementById("shipment").value;
+  const name = document.getElementById('name').value;
+  const berat = document.getElementById('berat').value;
+  const category = document.getElementById('category').value;
+  const shipment = document.getElementById('shipment').value;
 
   const newData = paket(name, berat, shipment, category);
-  arr.push(newData);
-  localStorage.setItem("barang", JSON.stringify(arr));
-  let barang = JSON.parse(localStorage.getItem("barang"));
+  const uniqueId = 'paket-' + new Date().getTime();
 
-  addNewRowToTable(newData, barang);
+  localStorage.setItem(uniqueId, JSON.stringify(newData));
+  addNewRowToTable(newData, uniqueId);
 });
 
-let isi = JSON.parse(localStorage.getItem("barang"));
+window.onload = function() {
+  let storedData = JSON.parse(localStorage.getItem('paket')) || [];
+  storedData.forEach(data => addNewRowToTable(data));
+};
 
-// // output [ 75000, 2 hari ]
-// // taro sini
-// document.getElementById('myForm').addEventListener('submit', function(event) {
-//     event.preventDefault(); // Prevent the default form submission
+function deleteData(id) {
+  // Remove the row from the table
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (row) {
+    row.parentNode.removeChild(row);
+  }
 
-//     // Get the values from the input elements
-//     const name = document.getElementById('name').value;
-//     const price = document.getElementById('price').value;
-//     const category = document.getElementById('category').value;
-//     const shipment = document.getElementById('shipment').value;
+  // Remove the item from localStorage
+  localStorage.removeItem(id);
+  window.location.reload()
+}
 
-//     // Create a new table row element
-//     const newRow = document.createElement('tr');
-//     newRow.classList.add('tbody');
-
-//     // Create the columns for the new row
-//     const cell1 = document.createElement('td');
-//     cell1.classList.add('text-center', 'border');
-//     cell1.textContent = document.querySelectorAll('#dataTable tr').length + 1; // Row number
-
-//     const cell2 = document.createElement('td');
-//     cell2.classList.add('text-center', 'border');
-//     cell2.textContent = name;
-
-//     const cell3 = document.createElement('td');
-//     cell3.classList.add('text-center', 'border');
-//     cell3.textContent = price + 'kg';
-
-//     const cell4 = document.createElement('td');
-//     cell4.classList.add('text-center', 'border');
-//     cell4.textContent = category;
-
-//     const cell5 = document.createElement('td');
-//     cell5.classList.add('text-center', 'border');
-//     cell5.textContent = shipment;
-
-//     const cell6 = document.createElement('td');
-//     cell6.classList.add('text-center', 'border');
-//     cell6.textContent = 'Belum Terkirim';
-
-//     const cell7 = document.createElement('td');
-//     cell7.classList.add('text-center', 'border');
-//     const div = document.createElement('div');
-//     div.classList.add('flex', 'px-1', 'w-full');
-//     const editImg = document.createElement('img');
-//     editImg.src = './img/edit.png';
-//     editImg.width = 20;
-//     editImg.height = 20;
-//     const deleteImg = document.createElement('img');
-//     deleteImg.src = './img/hapus.png';
-//     deleteImg.width = 20;
-//     deleteImg.height = 20;
-//     div.appendChild(editImg);
-//     div.appendChild(deleteImg);
-//     cell7.appendChild(div);
-
-//     // Append the columns to the new row
-//     newRow.appendChild(cell1);
-//     newRow.appendChild(cell2);
-//     newRow.appendChild(cell3);
-//     newRow.appendChild(cell4);
-//     newRow.appendChild(cell5);
-//     newRow.appendChild(cell6);
-//     newRow.appendChild(cell7);
-
-//     // Append the new row to the table body
-//     document.getElementById('dataTable').appendChild(newRow);
-
-//     //
+document.addEventListener('DOMContentLoaded', function() {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('paket-')) {
+      const data = JSON.parse(localStorage.getItem(key));
+      addNewRowToTable(data, key);
+    }
+  }
+});
