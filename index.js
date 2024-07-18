@@ -1,22 +1,55 @@
+document.getElementById('myForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const berat = document.getElementById('berat').value;
+  const category = document.getElementById('category').value;
+  const shipment = document.getElementById('shipment').value;
+
+  const newData = paket(name, berat, shipment, category);
+  const uniqueId = 'paket-' + new Date().getTime();
+
+  localStorage.setItem(uniqueId, JSON.stringify(newData));
+  addNewRowToTable(newData, uniqueId);
+});
+
+function paket(nama, beratPackage, tujuan, category) {
+  let name = jenisPaket(nama);
+  let pricePerKg = beratPaket(beratPackage);
+  let destination = tujuanPaket(tujuan);
+  let newPrice = name + pricePerKg + destination[0];
+  let result = {
+    namaBarang: nama,
+    berat: beratPackage,
+    tujuan: tujuan,
+    jenisPengirim: category,
+    estimasi: destination[1],
+    harga: newPrice,
+    status: "Sedang dalam proses",
+  };
+
+  return result;
+}
+
+
 function jenisPaket(nama) {
   let harga = 0;
   switch (nama) {
-    case "barang":
+    case "Pakaian":
       harga = 5_000;
       break;
-    case "makanan":
+    case "Makanan":
       harga = 7_000;
       break;
-    case "barang pecah belah":
+    case "Kaca":
       harga = 10_000;
       break;
-    case "elektronik":
+    case "Elektronik":
       harga = 12_000;
       break;
   }
   return harga;
 }
-//output = 5000
 
 function beratPaket(beratPackage) {
   let harga = 0;
@@ -39,145 +72,97 @@ function beratPaket(beratPackage) {
     return harga;
   }
 }
-//output = 10000
 
 function tujuanPaket(tujuan) {
   let arr = [];
   let harga = 0;
-  let str = "";
   const today = new Date();
   const waktu = new Date(today);
+  const yyyy = today.getFullYear()
   switch (tujuan) {
-    case "aceh":
+    case "Aceh":
       harga = 200_000;
       waktu.setDate(today.getDate() + 8);
       const threeDD = String(waktu.getDate()).padStart(2, "0");
       const threeMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const threeYY = String(waktu.getFullYear()).slice(-2);
-      const threeFormatted = `${threeDD}-${threeMM}-${threeYY}`;
+      const threeFormatted = `${threeDD}-${threeMM}-${yyyy}`;
       arr.push(harga, threeFormatted);
       break;
-    case "medan":
+    case "Medan":
       harga = 190_000;
       waktu.setDate(today.getDate() + 7);
       const sevenDD = String(waktu.getDate()).padStart(2, "0");
       const sevenMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const sevenYY = String(waktu.getFullYear()).slice(-2);
-      const sevenFormatted = `${sevenDD}-${sevenMM}-${sevenYY}`;
+      const sevenFormatted = `${sevenDD}-${sevenMM}-${yyyy}`;
       arr.push(harga, sevenFormatted);
       break;
-    case "padang":
+    case "Padang":
       harga = 175_000;
       waktu.setDate(today.getDate() + 6);
       const sixDD = String(waktu.getDate()).padStart(2, "0");
       const sixMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const sixYY = String(waktu.getFullYear()).slice(-2);
-      const sixFormatted = `${sixDD}-${sixMM}-${sixYY}`;
+      const sixFormatted = `${sixDD}-${sixMM}-${yyyy}`;
       arr.push(harga, sixFormatted);
       break;
-    case "lampung":
+    case "Lampung":
       harga = 80_000;
       waktu.setDate(today.getDate() + 4);
       const fourDD = String(waktu.getDate()).padStart(2, "0");
       const fourMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const fourYY = String(waktu.getFullYear()).slice(-2);
-      const fourFormatted = `${fourDD}-${fourMM}-${fourYY}`;
+      const fourFormatted = `${fourDD}-${fourMM}-${yyyy}`;
       arr.push(harga, fourFormatted);
       break;
-    case "samarinda":
+    case "Samarinda":
       harga = 180_000;
       waktu = "8 hari";
       waktu.setDate(today.getDate() + 8);
       const eightDD = String(waktu.getDate()).padStart(2, "0");
       const eightMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const eightYY = String(waktu.getFullYear()).slice(-2);
-      const eightFormatted = `${eightDD}-${eightMM}-${eightYY}`;
+      const eightFormatted = `${eightDD}-${eightMM}-${yyyy}`;
       arr.push(harga, eightFormatted);
       break;
-    case "jakarta":
+    case "Jakarta":
       harga = 25_000;
       waktu.setDate(today.getDate() + 1);
       const oneDD = String(waktu.getDate()).padStart(2, "0");
       const oneMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const oneYY = String(waktu.getFullYear()).slice(-2);
-      const oneFormatted = `${oneDD}-${oneMM}-${oneYY}`;
+      const oneFormatted = `${oneDD}-${oneMM}-${yyyy}`;
       arr.push(harga, oneFormatted);
       break;
-    case "bandung":
+    case "Bandung":
       harga = 50_000;
       waktu.setDate(today.getDate() + 2);
       const twoDD = String(waktu.getDate()).padStart(2, "0");
       const twoMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const twoYY = String(waktu.getFullYear()).slice(-2);
-      const twoFormatted = `${twoDD}-${twoMM}-${twoYY}`;
+      const twoFormatted = `${twoDD}-${twoMM}-${yyyy}`;
       arr.push(harga, twoFormatted);
       break;
-    case "jogja":
+    case "Jogja":
       harga = 100_000;
       waktu.setDate(today.getDate() + 4);
       const empatDD = String(waktu.getDate()).padStart(2, "0");
       const empatMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const empatYY = String(waktu.getFullYear()).slice(-2);
-      const empatFormatted = `${empatDD}-${empatMM}-${empatYY}`;
+      const empatFormatted = `${empatDD}-${empatMM}-${yyyy}`;
       arr.push(harga, empatFormatted);
       break;
-    case "manado":
+    case "Manado":
       harga = 230_000;
       waktu.setDate(today.getDate() + 10);
       const tenDD = String(waktu.getDate()).padStart(2, "0");
       const tenMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const tenYY = String(waktu.getFullYear()).slice(-2);
-      const tenFormatted = `${tenDD}-${tenMM}-${tenYY}`;
+      const tenFormatted = `${tenDD}-${tenMM}-${yyyy}`;
       arr.push(harga, tenFormatted);
       break;
-    case "jayapura":
+    case "Jayapura":
       harga = 210_000;
       waktu.setDate(today.getDate() + 9);
       const nineDD = String(waktu.getDate()).padStart(2, "0");
       const nineMM = String(waktu.getMonth() + 1).padStart(2, "0");
-      const nineYY = String(waktu.getFullYear()).slice(-2);
-      const nineFormatted = `${nineDD}-${nineMM}-${nineYY}`;
+      const nineFormatted = `${nineDD}-${nineMM}-${yyyy}`;
       arr.push(harga, nineFormatted);
       break;
   }
   return arr;
-}
-//output = [ 50000, '2 hari']
-let paket = function (nama, beratPackage, tujuan, category) {
-  let name = jenisPaket(nama);
-  let pricePerKg = beratPaket(beratPackage);
-  let destination = tujuanPaket(tujuan);
-  let newPrice = name + pricePerKg + destination[0];
-  let result = {
-    namaBarang: nama,
-    berat: beratPackage,
-    tujuan: tujuan,
-    jenisPengirim: category,
-    estimasi: destination[1],
-    harga: newPrice,
-    status: "Sedang dalam proses",
-  };
-
-  return result;
-}
-
-
-function getData(arr) {
-  let data = JSON.parse(arr)
-  let result = {}
-  console.log(data);
-  for(let i = 0; i < data.length; i++){
-    result = {
-      namaBarang: data[i].namaBarang,
-      berat: data[i].berat,
-      tujuan: data[i].tujuan,
-      jenisPengirim: data[i].jenisPengirim,
-      estimasi: data[i].estimasi,
-      harga: data[i].harga,
-      status: data[i].status
-    }
-  }
-  return result
 }
 
 function addNewRowToTable(data, id) {
@@ -198,7 +183,15 @@ function addNewRowToTable(data, id) {
 
   const cell2 = document.createElement('td');
   cell2.classList.add('text-center', 'border');
-  cell2.textContent = data.namaBarang;
+  if(data.namaBarang === "Makanan") {
+    cell2.textContent = "Makanan"
+  } else if(data.namaBarang === "Pakaian") {
+    cell2.textContent = "Pakaian/ Kain"
+  } else if(data.namaBarang === "Kaca") {
+    cell2.textContent = "Barang Pecah Belah"
+  } else if(data.namaBarang === "Elektronik"){
+    cell2.textContent = "Elektronik"
+  }
 
   const cell3 = document.createElement("td");
   cell3.classList.add("text-center", "border", "text-white");
@@ -232,7 +225,7 @@ function addNewRowToTable(data, id) {
   const deleteButton = document.createElement('button');
   deleteButton.classList.add('delete-button');
   deleteButton.onclick = function () {
-    deleteData(id); // Pass the unique identifier
+    deleteData(id);
   };
   const deleteImg = document.createElement('img');
   deleteImg.src = './img/hapus.png';
@@ -256,24 +249,6 @@ function addNewRowToTable(data, id) {
 
   document.getElementById('dataTable').appendChild(newRow);
 }
-
-let arr = [];
-
-
-document.getElementById('myForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  const name = document.getElementById('name').value;
-  const berat = document.getElementById('berat').value;
-  const category = document.getElementById('category').value;
-  const shipment = document.getElementById('shipment').value;
-
-  const newData = paket(name, berat, shipment, category);
-  const uniqueId = 'paket-' + new Date().getTime();
-
-  localStorage.setItem(uniqueId, JSON.stringify(newData));
-  addNewRowToTable(newData, uniqueId);
-});
 
 window.onload = function() {
   let storedData = JSON.parse(localStorage.getItem('paket')) || [];
