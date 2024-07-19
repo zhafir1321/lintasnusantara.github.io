@@ -86,7 +86,7 @@ h1 {
   justify-content: center;
 }
 
-.butt {
+.submit {
   margin-top: 10px;
   color: #fff;
   border-radius: 10px;
@@ -97,4 +97,9 @@ h1 {
 
 .nav {
   background-color: #003c43;
+}
+
+.head{
+  background-color: #003c43;
+  
 }

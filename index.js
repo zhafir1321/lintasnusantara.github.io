@@ -166,6 +166,7 @@ function tujuanPaket(tujuan) {
 }
 
 function addNewRowToTable(data, id) {
+  // function convert number to currency IDR format
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -178,11 +179,11 @@ function addNewRowToTable(data, id) {
   newRow.setAttribute('data-id', id);
 
   const cell1 = document.createElement('td');
-  cell1.classList.add('text-center', 'border');
+  cell1.classList.add('text-center', 'text-white');
   cell1.textContent = document.querySelectorAll('#dataTable tr').length;
 
   const cell2 = document.createElement('td');
-  cell2.classList.add('text-center', 'border');
+  cell2.classList.add('text-center', "text-white");
   if(data.namaBarang === "Makanan") {
     cell2.textContent = "Makanan"
   } else if(data.namaBarang === "Pakaian") {
@@ -194,33 +195,33 @@ function addNewRowToTable(data, id) {
   }
 
   const cell3 = document.createElement("td");
-  cell3.classList.add("text-center", "border", "text-white");
+  cell3.classList.add("text-center", "text-white");
   cell3.textContent = data.berat + "kg";
 
   const cell4 = document.createElement("td");
-  cell4.classList.add("text-center", "border", "text-white");
+  cell4.classList.add("text-center", "text-white");
   cell4.textContent = data.tujuan;
 
   const cell5 = document.createElement("td");
-  cell5.classList.add("text-center", "border", "text-white");
+  cell5.classList.add("text-center", "text-white");
   cell5.textContent = data.jenisPengirim;
 
   const cell6 = document.createElement("td");
-  cell6.classList.add("text-center", "border", "text-white");
+  cell6.classList.add("text-center", "text-white");
   cell6.textContent = data.estimasi;
 
   const cell7 = document.createElement('td');
-  cell7.classList.add('text-center', 'border');
+  cell7.classList.add('text-center', "text-white");
   cell7.textContent = formatRupiah(data.harga);
 
   const cell8 = document.createElement('td');
-  cell8.classList.add('text-center', 'border');
+  cell8.classList.add('text-center', "text-white");
   cell8.textContent = 'Sedang diproses';
 
   const cell9 = document.createElement('td');
-  cell9.classList.add('text-center', 'border');
+  cell9.classList.add('text-center');
   const div = document.createElement('div');
-  div.classList.add('flex', 'px-1', 'w-full');
+  div.classList.add('mx-auto');
 
   const deleteButton = document.createElement('button');
   deleteButton.classList.add('delete-button');
@@ -229,8 +230,8 @@ function addNewRowToTable(data, id) {
   };
   const deleteImg = document.createElement('img');
   deleteImg.src = './img/hapus.png';
-  deleteImg.width = 20;
-  deleteImg.height = 20;
+  deleteImg.width = 30;
+  deleteImg.height = 30;
   deleteButton.appendChild(deleteImg);
 
   div.appendChild(deleteButton);
@@ -250,23 +251,20 @@ function addNewRowToTable(data, id) {
   document.getElementById('dataTable').appendChild(newRow);
 }
 
-window.onload = function() {
-  let storedData = JSON.parse(localStorage.getItem('paket')) || [];
-  storedData.forEach(data => addNewRowToTable(data));
-};
-
+// function delete row data
 function deleteData(id) {
-  // Remove the row from the table
+  // delete row dari tabel
   const row = document.querySelector(`tr[data-id="${id}"]`);
   if (row) {
     row.parentNode.removeChild(row);
   }
 
-  // Remove the item from localStorage
+  // delete data item dari local storage dan langsung reload dijalankan
   localStorage.removeItem(id);
   window.location.reload()
 }
 
+// function ini akan berjalan setelah 
 document.addEventListener('DOMContentLoaded', function() {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
